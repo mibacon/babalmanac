@@ -1,0 +1,60 @@
+[
+  {
+    "Month": 12,
+    "Babylonian_Almanac": "+",
+    "new_eth": "n",
+    "Volume_PN_ID": 2,
+    "Archive": "Murašȗ",
+    "Text_Publication_Number": "BE 9, 1",
+    "Reign": "Dar",
+    "ALL": 1
+  },
+  {
+    "Month": 1,
+    "Babylonian_Almanac": "-",
+    "new_eth": "b",
+    "Volume_PN_ID": 3,
+    "Archive": "Murašȗ",
+    "Text_Publication_Number": "BE 9, 1",
+    "Reign": "ArtI",
+    "ALL": 1
+  },{
+    "Month": 1,
+    "Babylonian_Almanac": "-",
+    "new_eth": "n",
+    "Volume_PN_ID": 4,
+    "Archive": "Murašȗ",
+    "Text_Publication_Number": "BE 9, 1",
+    "Reign": "ArtI",
+    "ALL": 1
+  },
+  {
+    "Month": 8,
+    "Babylonian_Almanac": "+",
+    "new_eth": "b",
+    "Volume_PN_ID": 5,
+    "Archive": "Yahudu",
+    "Text_Publication_Number": "BE 9, 1",
+    "Reign": "ArtI",
+    "ALL": 1
+  },
+  {
+    "Month": 7,
+    "Babylonian_Almanac": "+",
+    "new_eth": "n",
+    "Volume_PN_ID": 6,
+    "Archive": "Yahudu",
+    "Text_Publication_Number": "BE 9, 1",
+    "Reign": "Dar",
+    "ALL": 1
+  },
+  {
+    "Month": 4,
+    "Babylonian_Almanac": "+",
+    "new_eth": "x",
+    "Volume_PN_ID": 7,
+    "Archive": "Yahudu",
+    "Text_Publication_Number": "BE 9, 1",
+    "Reign": "ArtI",
+    "ALL": 1
+  }]
