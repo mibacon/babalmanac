@@ -3,7 +3,10 @@ body {
     width:100%;
     font-family: courier;
 }
-
+#title {
+    margin-left: 20px;
+    margin-top: 20px;
+}
 #all {
     display: flex;
     flex-direction: row;

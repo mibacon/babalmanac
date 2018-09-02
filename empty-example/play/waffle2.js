@@ -8,7 +8,10 @@ $(function () {
 	
 	d3.json("data.json", function(data){
 		
-		
+				
+		var div = d3.select("body").append("div")
+			    .attr("class", "tooltip")
+			    .style("opacity", 0);
 	
 		var margin = {top:0, right:50, bottom:40, left:15},
 	    	width = 500- margin.left - margin.right,
@@ -31,9 +34,11 @@ $(function () {
 			   	.entries(data);
 			   	
 			// 
-		
+			nest.stats = {}
+
 			nest.forEach(function(v,k) {
-				nest.stats = {}
+				v.stats = {}
+
 				v.values.forEach(function(val,ke) {
 					val.stats = {}
 					val.stats["total"] = val.values.length
@@ -41,16 +46,10 @@ $(function () {
 					var bcount = 0
 					var ncount = 0
 					var xcount = 0
-			
-			
-					console.log(val.values.length)
+					
 
-					// if(!nest.stats[val.key]) {
-					// 	nest.stats[val.key] = val.values.length
-					// } else {
-					// 	 if(nest.stats[val.key] > val.values.length) {
-					// 		nest.stats[val.key] = val.values.length }
-					// }
+					v.stats[val.key] = val.values.length
+
 					
 					val.values.forEach(function(value, keys) {
 						if (value.new_eth == "b") {
@@ -70,17 +69,20 @@ $(function () {
 					val.stats["perNonB"] = nper + "%"
 					val.stats["perX"] = xper + "%"
 					
+					if(nest.stats[val.key]) {
+						if(nest.stats[val.key] < v.stats[val.key]) {
+							nest.stats[val.key] = v.stats[val.key]
+						}
+					} else {
+						nest.stats[val.key] = v.stats[val.key]
+					}
+					
 				})
+
+				
 			})
 
-			
-			var selectedLength;
-				if((nest[0].values.length)>(nest[1].values.length)){
-					selectedLength = nest[0].values.length
-				} else {
-					selectedLength = nest[1].values.length
-				}
-			console.log(nest)
+
 			
 		    var svg = d3.select(".right").selectAll(".dayType")
 		    	.data(nest)
@@ -117,17 +119,12 @@ $(function () {
 				.append("svg")
 				.attr("class", "selectedGroups")
 				.attr("height", function(d) {
-					if(d.stats.total < 4*numPerRow){
-						return height/selectedLength
-					} else {
-						return d.stats.total/numPerRow*7
-					}
-					
+					// return (d.stats.total/numPerRow*7)+ 30
+					return (nest.stats[d.key]/numPerRow*7) + 30
 				})
 					
 
-			// console.log(nest[0].values[1].key)
-
+				// console.log(nest)
 			
 			subSvg.append("text")
 				.text(function(d) { return d.key})
@@ -142,14 +139,15 @@ $(function () {
 				.attr("text-anchor", "end")
 				.attr("font-size", "10px")
 				
-				
-			
+
+						
 			
 			var waffle = subSvg.append("g")
 		        .attr("class", "waffle")
 		        .attr("transform", "translate(" + margin.left + "," + 30 + ")");
-		
-			waffle.selectAll("rect")
+	
+
+			var cells = waffle.selectAll("rect")
 				.data(function(d) {return d.values})
 				.enter().append('rect')
 				.sort(function(x, y){
@@ -183,10 +181,19 @@ $(function () {
 		  				return "blue"
 		  			}})
 		  		.style("opacity", 1)
-				// .on("mouseover", function(d) {
-					
-
-				// })
+				.on("mouseover", function(d) {
+			       div.transition()
+			         .duration(200)
+			         .style("opacity", .9);
+			       div.html(d.Text_Publication_Number + "<br/>" + d.DateMMDD)
+			         .style("left", (d3.event.pageX) + "px")
+			         .style("top", (d3.event.pageY - 28) + "px");
+			       })
+			     .on("mouseout", function(d) {
+			       div.transition()
+			         .duration(500)
+			         .style("opacity", 0);
+			       })
 
 
 		}
