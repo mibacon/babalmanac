@@ -3,6 +3,19 @@ body {
     width:100%;
     font-family: courier;
 }
+
+div.tooltip {
+  position: absolute;
+  text-align: center;
+  /*width: 60px;*/
+  /*height: 28px;*/
+  padding: 5px;
+  font: 12px;
+  background: #E8DEE8;
+  border: 0px;
+  pointer-events: none;
+}
+
 #title {
     margin-left: 20px;
     margin-top: 20px;

@@ -26,27 +26,16 @@ $(function () {
 		  	.range([0, size * numPerRow])
 		  	
 		  	
-		var update = function(field) {
-			var month_order = ["Nisannu", "Ayyaru", "Simanu", "Du'uzu", "Abu", "Elulu", "Tasritu", "Arahsamnu", "Kislimu", "Tebetu", "Sabatu", "Addaru"];
-			var king_order = ["Nebuchadnezzar II", "Amel-Marduk","Nabonidus", "Cyrus", "Cambyses",  "Bardiya", "Nebuchadnezzar IV", "DariusI", "Xerxes", "Artaxerxes I", "Darius II", "Unlisted"]
-
+		var draw = function(field) {
+		
 
 			var nest = d3.nest()
 				.key(function(d) { return d.Babylonian_Almanac})
-				.key(function(d) { return d[field]})
-				// .sortKeys(d3.ascending)
-				.sortKeys(function(a,b) { 
-					if(field == "Month") {
-						return month_order.indexOf(a) - month_order.indexOf(b); 
-					} else if (field == "Reign") {
-						return king_order.indexOf(a) - king_order.indexOf(b); 
-					}  else {
-						return d3.ascending(a,b)
-					}
-				})
-			   	.entries(data);
+				.key(function(d) { return d.ALL})
+				.sortKeys(d3.ascending)
+			 	.entries(data);
 			   	
-			// 
+			
 			nest.stats = {}
 
 			nest.forEach(function(v,k) {
@@ -89,23 +78,16 @@ $(function () {
 					} else {
 						nest.stats[val.key] = v.stats[val.key]
 					}
+
+
 					
 				})
 
 				
 			})
 
-
-			nest.stats.significance = {
-				"ALL": [],
-				"Archive": ["Yahudu"],
-				"Reign": ["Bar", "Dar", "DarII"],
-				"Month": ["Simanu","Elulu", "Tasritu", "Arahsamnu", "Kislimu", "Tebetu"],
-				"father_eth": ["Non-Babylonian"]
-			}
-
-			console.log((nest.stats.significance.Reign))
-
+			console.log(nest)
+			
 		    var svg = d3.select(".right").selectAll(".dayType")
 		    	.data(nest)
 		    	.enter()
@@ -141,13 +123,11 @@ $(function () {
 				.append("svg")
 				.attr("class", "selectedGroups")
 				.attr("height", function(d) {
-					// return (d.stats.total/numPerRow*7)+ 30
-					return (nest.stats[d.key]/numPerRow*7) + 35
+					return (nest.stats[d.key]/numPerRow*7) + 30
 				})
 					
 
-				// console.log(nest)
-			
+						
 			subSvg.append("text")
 				.text(function(d) { return d.key})
 				.attr("transform", "translate(" + margin.left + "," + 25 + ")")
@@ -155,16 +135,9 @@ $(function () {
 				
 			subSvg.append("text")
 				.text(function(d) { 
-					if(nest.stats.significance[field].indexOf(d.key) >=0 ) { 
-							return "Bab:" + d.stats.perBab + " NonBab:" + d.stats.perNonB  + " *"
-	
-					} else {
-						return "Bab:" + d.stats.perBab + " NonBab:" + d.stats.perNonB 
-					}
-
-					
+					return "Bab:" + d.stats.perBab + " NonBab:" + d.stats.perNonB
 				})
-				.attr("transform", "translate(" + 282 + "," + 25 + ")")
+				.attr("transform", "translate(" + 270 + "," + 25 + ")")
 				.attr("text-anchor", "end")
 				.attr("font-size", "10px")
 				
@@ -205,13 +178,12 @@ $(function () {
 			  	})
 		  		.attr('stroke-width', 1)
 		  		.attr('stroke', 'white')
-		  		.attr('class', function(d){ return d.Text_Publication_Number})
-		  			
+		  		.attr('class', function(d){ 
+		  			if(d.Text_Publication_Number == "BE9_37"){
+		  				return "blue"
+		  			}})
 		  		.style("opacity", 1)
 				.on("mouseover", function(d) {
-				// 	d3.selectAll("." + this.getAttribute('class')).style("opacity", .5)
-				// })
-
 			       div.transition()
 			         .duration(200)
 			         .style("opacity", .9);
@@ -220,14 +192,53 @@ $(function () {
 			         .style("top", (d3.event.pageY - 28) + "px");
 			       })
 			     .on("mouseout", function(d) {
-			     	// d3.selectAll("."+ this.getAttribute('class')).style("opacity", 1) })
 			       div.transition()
 			         .duration(500)
 			         .style("opacity", 0);
 			       })
 
-
+		svg.exit().remove();
 		}
+
+		draw()
+
+		var update = function(field){
+
+			var month_order = ["Nisannu", "Ayyaru", "Simanu", "Du'uzu", "Abu", "Elulu", "Tasritu", "Arahsamnu", "Kislimu", "Tebetu", "Sabatu", "Addaru"];
+
+			var nest = d3.nest()
+				.key(function(d) { return d.Babylonian_Almanac})
+				.key(function(d) { return d[field]})
+				.sortKeys(function(a,b) { 
+					if(field == "Month") {
+						return month_order.indexOf(a) - month_order.indexOf(b); 
+					} else {
+						return d3.ascending(a,b)
+					}
+				})
+			   	.entries(data);
+
+			var updated = d3.select(".right").selectAll(".dayType")
+				.data(nest)
+
+			
+
+			updated.enter()
+		    	.append("div")
+		    	.attr("class", "dayType")
+		    	.attr("id", function(d) {
+		    		if(d.key == "+") {
+		    			return "Positive"
+		    		} else if (d.key == "-") {
+		    			return "Negative"
+		    		} else {
+		    			return "Ambiguous"
+		    		}
+		    	})
+		}
+
+		
+
 
 		$('button').on("click", function(){
 			if(!$(this).hasClass("clicked")) {
