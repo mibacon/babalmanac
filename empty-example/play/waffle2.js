@@ -17,8 +17,8 @@ $(function () {
 	    	width = 500- margin.left - margin.right,
 			height = totalHeight - margin.top - margin.bottom;
 		
-		var numPerRow = 53
-		var size = 5
+		var numPerRow = 60	
+		var size = 7
 	
 
 		var scale = d3.scaleLinear()
@@ -99,15 +99,16 @@ $(function () {
 			nest.stats.significance = {
 				"ALL": [],
 				"Archive": ["Yahudu"],
-				"Reign": ["Bar", "Dar", "DarII"],
+				"Reign": ["Bardiya", "Darius I", "Darius II"],
 				"Month": ["Simanu","Elulu", "Tasritu", "Arahsamnu", "Kislimu", "Tebetu"],
 				"father_eth": ["Non-Babylonian"]
 			}
 
-			console.log((nest.stats.significance.Reign))
+
+			var filterNest = nest.filter(function(d) {return ((d.key == "+")||(d.key == "-"))})
 
 		    var svg = d3.select(".right").selectAll(".dayType")
-		    	.data(nest)
+		    	.data(filterNest)
 		    	.enter()
 		    	.append("div")
 		    	.attr("class", "dayType")
@@ -131,7 +132,7 @@ $(function () {
 		    		} else {
 		    			return "AMBIGUOUS DAYS"
 		    		}})
-		    	.attr("transform", "translate(" + margin.left + "," + 15 + ")")
+		    	.attr("transform", "translate(" + margin.left + "," + 20 + ")")
 		    	
 		    	
 			    
@@ -142,7 +143,7 @@ $(function () {
 				.attr("class", "selectedGroups")
 				.attr("height", function(d) {
 					// return (d.stats.total/numPerRow*7)+ 30
-					return (nest.stats[d.key]/numPerRow*7) + 35
+					return (nest.stats[d.key]/numPerRow*7) + 65
 				})
 					
 
@@ -156,15 +157,16 @@ $(function () {
 			subSvg.append("text")
 				.text(function(d) { 
 					if(nest.stats.significance[field].indexOf(d.key) >=0 ) { 
-							return "Bab:" + d.stats.perBab + " NonBab:" + d.stats.perNonB  + " *"
+							return "Bab:" + d.stats.perBab + "	 NonBab:" + d.stats.perNonB  + " *"
 	
 					} else {
-						return "Bab:" + d.stats.perBab + " NonBab:" + d.stats.perNonB 
+						return "Bab:" + d.stats.perBab + " 	NonBab:" + d.stats.perNonB 
 					}
 
 					
 				})
-				.attr("transform", "translate(" + 282 + "," + 25 + ")")
+				// .attr("transform", "translate(" + 282 + "," + 25 + ")")
+				.attr("transform", "translate(" + 438 + "," + 25 + ")")
 				.attr("text-anchor", "end")
 				.attr("font-size", "10px")
 				
@@ -180,6 +182,7 @@ $(function () {
 				.data(function(d) {return d.values})
 				.enter().append('rect')
 				.sort(function(x, y){
+					if(x.key == "+/-") {console.log(x.new_eth)}
 				   return d3.ascending(x.new_eth, y.new_eth);
 				})
 				.attr('x', (d, i) => {
@@ -215,7 +218,7 @@ $(function () {
 			       div.transition()
 			         .duration(200)
 			         .style("opacity", .9);
-			       div.html("Document:" + d.Text_Publication_Number + "<br/> Date:" + d.Date_MMDD)
+			       div.html("Document: " + d.Text_Publication_Number + "<br/> Date: " + d.Date_MMDD)
 			         .style("left", (d3.event.pageX) + "px")
 			         .style("top", (d3.event.pageY - 28) + "px");
 			       })
